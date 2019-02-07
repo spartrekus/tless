@@ -31,6 +31,15 @@
 #define clrscr()		printf(ESC "[2J") //clear the screen, move to (1,1)
 #define gotoxy(x,y)		printf(ESC "[%d;%dH", y, x);
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
 
 int linesel = 0;
 int colmax = 0;
@@ -246,7 +255,7 @@ int main( int argc, char *argv[])
     ///////////////
     if ( argc == 1)
     {
-       printf("Usage: please enter a Bib file." );
+       printf("Usage: please enter a file to use with tless." );
        return 0;
     }
 
@@ -278,13 +287,17 @@ int main( int argc, char *argv[])
         else if ( ch == 'Q' )     gameover = 1;
 
         else if ( ch == 'g' )     linesel = 0;
+        else if ( ch == 'G' )     linesel = file_linemax - w.ws_row;
         else if ( ch == '0' )     linesel = 0;
         else if ( ch == 'j' )     linesel++;
         else if ( ch == 'k' )     linesel--;
 
 
-        else if ( ch == 32 )      linesel+= rowmax/2;
-        else if ( ch == 'u' )     linesel-= rowmax/2;
+        else if ( ch == 32 )      linesel+= rowmax * 76 / 100;
+        else if ( ch == 'u' )     linesel-= rowmax * 76 / 100;
+
+        else if ( ch == 't' )     printf("%syellow\n", KYEL);
+        else if ( ch == 'T' )     printf("%syellow\n", KYEL);
 
         else if ( ch == 'd' )     linesel+=10;
         else if ( ch == 'n' )     linesel+=10;
@@ -311,6 +324,18 @@ int main( int argc, char *argv[])
             printf("got: \"%s\"\n", string );
             nsystem( string );
             disable_waiting_for_enter();
+        }
+
+        else if ( ch == 'm') 
+        {
+           gotoxy( colmax-4, rowmax-1 );
+           printf( "|m|" );
+           ch = getchar();
+           enable_waiting_for_enter();
+           if ( ch == 'r' )
+              nsystem( " bibman " );
+           ch = 0;
+           disable_waiting_for_enter();
         }
 
         else if (ch == '!') 
