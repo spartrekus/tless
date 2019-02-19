@@ -241,6 +241,13 @@ int main( int argc, char *argv[])
        return 0;
     }
 
+    if ( argc == 2)
+    if ( strcmp( argv[1] , "-y" ) ==  0 ) 
+    {
+       printf("%syellow\n", KYEL);
+       return 0;
+    }
+
     int key = 0;  int fooi;
     char fichier[PATH_MAX];
     char string[PATH_MAX];
